@@ -19,10 +19,14 @@
 
 # production
 /build
+.next
+out
 
 # misc
 .DS_Store
 *.pem
+.env
+.DS_Store
 
 # debug
 npm-debug.log*
@@ -39,3 +43,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+
+
+
