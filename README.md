@@ -4,7 +4,13 @@ A full-featured **Next.js 13+ App Router** project using **TypeScript**, **Redux
 This app demonstrates **CRUD operations** (Create, Read, Update, Delete) for products via a remote API.
 
 ---
+🚀 Live Demo
 
+You can view the deployed project on Vercel:
+
+https://camp-coding-test.vercel.app/ 
+
+---
 ## 🚀 Features
 
 * **List Products**: Fetch and display products from the API.
