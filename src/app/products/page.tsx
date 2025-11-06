@@ -1,11 +1,12 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
 import { fetchProducts, Product } from "@/redux/slices/getProductsSlice";
 import { deleteProduct, resetDeleteState } from "@/redux/slices/deleteProductSlice";
 import { toast } from "sonner";
+import DeleteButton from "../components/deleteButton";
+import Image from "next/image";
 
 export default function ProductsPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -73,7 +74,7 @@ export default function ProductsPage() {
             <p className="text-gray-500 mb-2">Available: {product.number_of_pieces}</p>
 
             {product.product_image?.length ? (
-              <img
+              <Image
                 src={product.product_image[0].image_url}
                 alt={product.product_name}
                 width={400}
@@ -82,15 +83,7 @@ export default function ProductsPage() {
               />
             ) : null}
 
-            <div className="mt-4 flex justify-end">
-              <button
-                onClick={() => handleDelete(product.product_id!)}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                disabled={deletingId === product.product_id}
-              >
-                {deletingId === product.product_id ? "Deleting..." : "Delete"}
-              </button>
-            </div>
+          <DeleteButton handleDelete={handleDelete} deletingId={deletingId} product={product} />
           </div>
         ))}
       </div>

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import api from "../Api";
+import axios from "axios";
 
 interface DeleteProductState {
   loading: boolean;
@@ -22,7 +23,7 @@ export const deleteProduct = createAsyncThunk<
   { rejectValue: string }
 >("deleteProduct/delete", async (product_id, { rejectWithValue }) => {
   try {
-    const response = await api.post("/delete_product.php", { product_id });
+    const response = await axios.post("/api/products/delete", { productId: product_id });
 
     if (response.data.status === "success") {
       return product_id; // return deleted product ID
