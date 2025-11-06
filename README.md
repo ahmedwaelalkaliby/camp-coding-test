@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛍️ Next.js Products CRUD App
 
-## Getting Started
+A full-featured **Next.js 13+ App Router** project using **TypeScript**, **Redux Toolkit**, **Axios**, and **Sonner** for toast notifications.
+This app demonstrates **CRUD operations** (Create, Read, Update, Delete) for products via a remote API.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+* **List Products**: Fetch and display products from the API.
+* **Create Product**: Add a new product using a dedicated form.
+* **Update Product**: Edit product details with a pre-filled form.
+* **Delete Product**: Delete products with confirmation.
+* **Image Display**: Render product images using Next.js `Image` component.
+* **Responsive Design**: Fully responsive layout with Tailwind CSS.
+* **Toasts**: Success and error messages via **Sonner**.
+
+---
+
+## 🛠️ Tech Stack
+
+* **Next.js 13+** (App Router)
+* **TypeScript**
+* **Redux Toolkit** for state management
+* **Axios** for HTTP requests
+* **Tailwind CSS** for styling
+* **Sonner** for notifications
+
+---
+
+## ⚡ Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/ahmedwaelalkaliby/camp-coding-test
+cd nextjs-crud-products
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Start the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open your browser at [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📝 Usage
 
-## Learn More
+1. **View Products**: Products are listed on the main page.
+2. **Create Product**: Click **"Create New Product"** → Fill the form → Submit.
+3. **Edit Product**: Click **"Edit"** on a product → Update details → Save.
+4. **Delete Product**: Click **"Delete"** → Confirm deletion.
 
-To learn more about Next.js, take a look at the following resources:
+All operations update the local Redux store immediately, with feedback via **toast notifications**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔗 API
 
-## Deploy on Vercel
+All API requests are proxied through Next.js API routes:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Operation      | Method | Route                  |
+| -------------- | ------ | ---------------------- |
+| Create Product | POST   | `/api/products/create` |
+| Update Product | POST   | `/api/products/update` |
+| Delete Product | POST   | `/api/products/delete` |
+| Read Products  | GET    | `/api/products/read`   |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🎨 Styling
+
+* Tailwind CSS is used for a **modern, responsive UI**.
+* Flexbox and grid layouts are used for product cards.
+
+---
+
+## ⚠️ Notes
+
+* Ensure the backend API (`camp-coding.tech`) is reachable.
+* Product images are optional; the UI will render only if available.
+* Form validations are minimal; adjust as needed for production.
+
+---
+
+This project is ready for **extension**, including authentication, file uploads, or more advanced product management features.
