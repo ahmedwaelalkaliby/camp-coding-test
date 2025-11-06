@@ -8,7 +8,7 @@ export default function DeleteButton({handleDelete, deletingId, product}:{handle
      <div className="mt-4 flex justify-end">
               <button
                 onClick={() => handleDelete(product.product_id || 0)}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                className="bg-red-500 text-white w-[100px] h-[60px] rounded hover:bg-red-600 transition"
                 disabled={deletingId === product.product_id || false}
               >
                 {deletingId === product.product_id ? "Deleting..." : "Delete"}

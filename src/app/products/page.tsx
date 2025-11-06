@@ -4,52 +4,70 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
 import { fetchProducts, Product } from "@/redux/slices/getProductsSlice";
 import { deleteProduct, resetDeleteState } from "@/redux/slices/deleteProductSlice";
+import { updateProduct, resetUpdateState } from "@/redux/slices/updateProductSlice";
 import { toast } from "sonner";
 import DeleteButton from "../components/deleteButton";
+import UpdateProductForm from "../components/UpdateProductForm";
 import Image from "next/image";
 
 export default function ProductsPage() {
   const dispatch = useDispatch<AppDispatch>();
   const { products, loading, error } = useSelector((state: RootState) => state.getProducts);
   const deleteState = useSelector((state: RootState) => state.deleteProduct);
+  const updateState = useSelector((state: RootState) => state.updateProduct);
 
   const [localProducts, setLocalProducts] = useState<Product[]>([]);
-  const [deletingId, setDeletingId] = useState<number | null>(null); // Track product being deleted
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  // Fetch products initially
+  // Fetch products
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  // Sync local state with Redux products
+  // Sync local products
   useEffect(() => {
     setLocalProducts(products);
   }, [products]);
 
-  // Handle delete success/error
+  // Handle delete feedback
   useEffect(() => {
-    if (deleteState.success) {
+    if (deleteState.success && deleteState.deletedProductId) {
       toast.success("Product deleted successfully!");
-      setLocalProducts(prev => prev.filter(p => p.product_id !== deleteState.deletedProductId));
+      setLocalProducts((prev) => prev.filter(p => p.product_id !== deleteState.deletedProductId));
       setDeletingId(null);
       dispatch(resetDeleteState());
-    }
-    if (deleteState.error) {
+    } else if (deleteState.error) {
       toast.error(deleteState.error);
       setDeletingId(null);
       dispatch(resetDeleteState());
     }
-  }, [deleteState.success, deleteState.error, deleteState.deletedProductId, dispatch]);
+  }, [deleteState, dispatch]);
 
   const handleDelete = async (productId: number) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
 
     try {
-      setDeletingId(productId); // Disable only this button
+      setDeletingId(productId);
       await dispatch(deleteProduct(productId)).unwrap();
-    } catch (error: string | unknown) {
-      toast.error("Failed to delete product: " + (error instanceof Error ? error.message : ""));
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to delete product");
       setDeletingId(null);
+    }
+  };
+
+  // Handle update
+  const handleUpdate = async (data: Product) => {
+    try {
+      await dispatch(updateProduct(data)).unwrap();
+      toast.success("Product updated successfully!");
+      setLocalProducts((prev) =>
+        prev.map((p) => (p.product_id === data.product_id ? { ...data } : p))
+      );
+      setEditingProduct(null);
+      dispatch(resetUpdateState());
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to update product");
     }
   };
 
@@ -61,19 +79,9 @@ export default function ProductsPage() {
       <h1 className="text-2xl font-bold mb-6">Products</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {localProducts.map((product: Product) => (
-          <div
-            key={product.product_id}
-            className="border rounded-lg p-4 shadow hover:shadow-lg transition"
-          >
-            <h2 className="text-lg font-semibold mb-2">{product.product_name}</h2>
-            <p className="text-gray-600 mb-2">{product.product_description}</p>
-            <p className="text-gray-800 font-medium mb-2">
-              Price: {product.price_after_discount} USD
-            </p>
-            <p className="text-gray-500 mb-2">Available: {product.number_of_pieces}</p>
-
-            {product.product_image?.length ? (
+        {localProducts.map((product) => (
+          <div key={product.product_id} className="border rounded-lg p-4 shadow hover:shadow-lg transition">
+            {product.product_image?.[0] && (
               <Image
                 src={product.product_image[0].image_url}
                 alt={product.product_name}
@@ -81,12 +89,37 @@ export default function ProductsPage() {
                 height={160}
                 className="w-full h-40 object-cover rounded mb-2"
               />
-            ) : null}
+            )}
+            <h2 className="text-lg font-semibold mb-2">{product.product_name}</h2>
+            <p className="text-gray-600 mb-2">{product.product_description}</p>
+            <p className="text-gray-800 font-medium mb-2">
+              Price: {product.price_after_discount} USD
+            </p>
+            <p className="text-gray-500 mb-2">Available: {product.number_of_pieces}</p>
 
-          <DeleteButton handleDelete={handleDelete} deletingId={deletingId} product={product} />
+            <div className="flex gap-2 mt-2 items-center justify-center">
+              <DeleteButton handleDelete={handleDelete} deletingId={deletingId} product={product} />
+              <button
+                onClick={() => setEditingProduct(product)}
+                className="bg-yellow-500 text-white  w-[100px] h-[60px] mt-4 rounded hover:bg-yellow-600 transition"
+              >
+                Edit
+              </button>
+            </div>
           </div>
         ))}
       </div>
+
+      {editingProduct && (
+        <div className="mt-6">
+          <UpdateProductForm
+            product={editingProduct}
+            loading={updateState.loading}
+            onSave={handleUpdate}
+            onCancel={() => setEditingProduct(null)}
+          />
+        </div>
+      )}
     </div>
   );
 }

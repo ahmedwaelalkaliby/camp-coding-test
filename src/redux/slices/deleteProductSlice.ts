@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import api from "../Api";
 import axios from "axios";
 
 interface DeleteProductState {
@@ -18,8 +17,8 @@ const initialState: DeleteProductState = {
 
 // Async thunk to delete product by ID
 export const deleteProduct = createAsyncThunk<
-  number, // return type = deleted product ID
-  number, // argument type = product_id
+  number, 
+  number, 
   { rejectValue: string }
 >("deleteProduct/delete", async (product_id, { rejectWithValue }) => {
   try {
